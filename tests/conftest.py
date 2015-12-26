@@ -2,7 +2,7 @@ import pytest
 import threading
 import requests
 import requests_ftp
-from simple_ftpd import SimpleFTPServer
+from simple_ftpd import SimpleFTPServer, FTPServerWithTransferStats
 from simple_proxy import ProxyServer
 
 def pytest_configure(config):
@@ -11,6 +11,15 @@ def pytest_configure(config):
 @pytest.fixture(scope='session')
 def ftpd():
     ftp_server = SimpleFTPServer()
+    ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
+    ftp_server_thread.daemon = True
+    ftp_server_thread.start()
+
+    return ftp_server
+
+@pytest.fixture(scope='session')
+def ftpd_with_transfer_stats():
+    ftp_server = FTPServerWithTransferStats()
     ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
     ftp_server_thread.daemon = True
     ftp_server_thread.start()
