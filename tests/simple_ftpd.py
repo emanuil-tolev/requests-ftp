@@ -72,6 +72,10 @@ class SimpleFTPServer(FTPServer):
         self._anon_root = tempfile.mkdtemp()
         self._ftp_home = tempfile.mkdtemp()
 
+        print self._anon_root, self.anon_root
+        print self._ftp_home, self.ftp_home
+        print self.ftp_user, self.ftp_password
+
         authorizer = DummyAuthorizer()
         authorizer.add_user(self.ftp_user, self.ftp_password, self.ftp_home, perm='elradfmwM')
         authorizer.add_anonymous(self.anon_root)
@@ -83,6 +87,7 @@ class SimpleFTPServer(FTPServer):
         self._ftp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._ftp_socket.bind(('', 0))
         self._ftp_port = self._ftp_socket.getsockname()[1]
+        print self.ftp_port
 
         # Create a new pyftpdlib server with the socket and handler we've configured
         FTPServer.__init__(self, self._ftp_socket, handler)
@@ -112,6 +117,10 @@ class FTPServerWithTransferStats(FTPServer):
         self._anon_root = tempfile.mkdtemp()
         self._ftp_home = tempfile.mkdtemp()
 
+        print self._anon_root, self.anon_root
+        print self._ftp_home, self.ftp_home
+        print self.ftp_user, self.ftp_password
+
         authorizer = DummyAuthorizer()
         authorizer.add_user(self.ftp_user, self.ftp_password, self.ftp_home, perm='elradfmwM')
         authorizer.add_anonymous(self.anon_root)
@@ -124,6 +133,7 @@ class FTPServerWithTransferStats(FTPServer):
         self._ftp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._ftp_socket.bind(('', 0))
         self._ftp_port = self._ftp_socket.getsockname()[1]
+        print self.ftp_port
 
         # Create a new pyftpdlib server with the socket and handler we've configured
         FTPServer.__init__(self, self._ftp_socket, handler)

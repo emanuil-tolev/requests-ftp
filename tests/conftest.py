@@ -1,5 +1,6 @@
 import pytest
-import threading
+# import threading
+import multiprocessing
 import requests
 import requests_ftp
 from simple_ftpd import SimpleFTPServer, FTPServerWithTransferStats
@@ -11,7 +12,8 @@ def pytest_configure(config):
 @pytest.fixture(scope='session')
 def ftpd():
     ftp_server = SimpleFTPServer()
-    ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
+    # ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
+    ftp_server_thread = multiprocessing.Process(target=ftp_server.serve_forever)
     ftp_server_thread.daemon = True
     ftp_server_thread.start()
 
@@ -20,7 +22,8 @@ def ftpd():
 @pytest.fixture(scope='session')
 def ftpd_with_transfer_stats():
     ftp_server = FTPServerWithTransferStats()
-    ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
+    # ftp_server_thread = threading.Thread(target=ftp_server.serve_forever)
+    ftp_server_thread = multiprocessing.Process(target=ftp_server.serve_forever)
     ftp_server_thread.daemon = True
     ftp_server_thread.start()
 
