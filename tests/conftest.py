@@ -4,6 +4,7 @@ import requests
 import requests_ftp
 from simple_ftpd import SimpleFTPServer
 from simple_proxy import ProxyServer
+from dummyserver.server import FTPSocketDummyServer
 import threading
 
 
@@ -19,6 +20,15 @@ def ftpd():
     ftp_server_thread.start()
 
     return ftp_server
+
+
+@pytest.fixture()
+def ftpdummy(request):
+    def fin():
+        FTPSocketDummyServer.cleanup()
+        FTPSocketDummyServer.server_thread.join(0.1)
+    request.addfinalizer(fin)
+    return FTPSocketDummyServer
 
 
 @pytest.fixture

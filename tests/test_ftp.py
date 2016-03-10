@@ -66,7 +66,7 @@ def test_basic_retr(ftpd, session):
         assert response.status_code == 226
 
 
-def test_ftp_retr_with_multiple_lines_response(ftpd, session):
+def test_ftp_retr_with_multiple_lines_response(ftpdummy, session):
     '''
     Example from NASA:
         ftp://lasco6.nascom.nasa.gov/pub/lasco/lastimage/lastimg_C2.gif
@@ -75,10 +75,10 @@ def test_ftp_retr_with_multiple_lines_response(ftpd, session):
     `status_code` need to be build from here and get the code
     from the latest line
     '''
-    with _prepareTestData(dir=ftpd.anon_root) as (testfile, testdata):
-        response = session.retr("ftp://127.0.0.1:%d/%s" % (ftpd.ftp_port, testfile))
+    ftpdummy.start_response_handler(b'226-File successfully transferred\r\n226 0.000 seconds')
+    response = session.retr("ftp://127.0.0.1:%d/anyfile" % ftpdummy.port)
 
-        assert response.status_code == 226
+    assert response.status_code == 226
 
 
 def test_head(ftpd, session):
